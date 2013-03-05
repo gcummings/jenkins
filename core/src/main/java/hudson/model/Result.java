@@ -134,7 +134,11 @@ public final class Result implements Serializable, CustomExportedBean {
         return FAILURE;
     }
 
-    private static List<String> getNames() {
+    /**
+     * @since 1.508 (before that, this method was private.)
+     * @return List of Result names
+     */
+    public static List<String> getNames() {
         List<String> l = new ArrayList<String>();
         for (Result r : all)
             l.add(r.name);

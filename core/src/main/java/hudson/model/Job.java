@@ -1,7 +1,7 @@
 /*
  * The MIT License
  * 
- * Copyright (c) 2004-2009, Sun Microsystems, Inc., Kohsuke Kawaguchi, Martin Eigenbrodt, Matthew R. Harrah, Red Hat, Inc., Stephen Connolly, Tom Huybrechts, CloudBees, Inc.
+ * Copyright (c) 2004-2009, Sun Microsystems, Inc., Kohsuke Kawaguchi, Martin Eigenbrodt, Matthew R. Harrah, Red Hat, Inc., Stephen Connolly, Tom Huybrechts, CloudBees, Inc., Geoff Cummings
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -868,6 +868,25 @@ public abstract class Job<JobT extends Job<JobT, RunT>, RunT extends Run<JobT, R
         return r;
     }
     
+
+    /**
+     * Returns the last build where build result >= threshold. Otherwise null 
+     * @see #getLastSuccessfulBuild
+     * @since 1.508
+     */
+    public RunT getLastBuildOverThreshold(Result threshold) {
+        RunT r = getLastBuild();
+        if (null != threshold) {
+            while (r != null) {
+                if (!r.isBuilding() && r.getResult() != null && r.getResult().isBetterOrEqualTo(threshold)) {
+                    return r;
+                }
+                r = r.getPreviousBuild();
+            }
+        }
+        return null;
+    }
+
     /**
      * Returns the last 'numberOfBuilds' builds with a build result >= 'threshold'
      * 
